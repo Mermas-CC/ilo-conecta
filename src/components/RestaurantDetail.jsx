@@ -86,6 +86,7 @@ function RestaurantDetail({ restaurantId, onBack }) {
     setAvailableTables([]);
     setError(null);
     try {
+      const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(
         `${API_URL}/restaurants/${restaurantId}/availability?date=${date}&time=${time}&guests=${guests}`
       );
