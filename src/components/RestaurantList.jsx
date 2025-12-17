@@ -147,93 +147,108 @@ function RestaurantList({ onSelectRestaurant }) {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-hidden relative rounded-3xl border border-mesa-sidebar bg-white shadow-inner mx-4 mb-4">
+      <div className="flex-1 overflow-hidden relative rounded-3xl border border-mesa-sidebar bg-white shadow-inner mx-4 mb-4" style={{ minHeight: '600px', height: 'calc(100vh - 400px)' }}>
         {viewMode === 'list' ? (
-          <div className="h-full overflow-y-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredRestaurants.map(restaurant => (
-              <div
-                key={restaurant.id}
-                onClick={() => onSelectRestaurant(restaurant.id)}
-                className="stagger-item group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100 hover:border-mesa-orange hover:scale-[1.02] transform"
-              >
-                <div className="relative h-48">
-                  <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1">
-                    <Star size={12} className="text-yellow-400 fill-yellow-400" /> {restaurant.rating}
+          <div className="h-full overflow-y-auto p-4">
+            {/* List/Grid View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredRestaurants.map(restaurant => (
+                <div
+                  key={restaurant.id}
+                  onClick={() => onSelectRestaurant(restaurant.id)}
+                  className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100 hover:border-mesa-orange hover:scale-[1.02] transform"
+                >
+                  <div className="relative h-48">
+                    <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
+                    <div className="absolute top-3 right-3 bg-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1">
+                      <Star size={12} className="text-yellow-400 fill-yellow-400" /> {restaurant.rating}
+                    </div>
+                  </div>
+
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold text-mesa-text mb-1">{restaurant.name}</h3>
+                    <p className="text-sm text-gray-500 mb-4">{restaurant.cuisine}</p>
+
+                    <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-gray-600 text-sm">
+                        <MapPin size={14} />
+                        <span className="truncate">{restaurant.address.split(',')[0]}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => onSelectRestaurant(restaurant.id)}
+                      className="w-full bg-mesa-orange hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+                    >
+                      <span>Ver Mesa</span>
+                      <Clock size={16} />
+                    </button>
                   </div>
                 </div>
-
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h2 className="text-xl font-bold text-mesa-text">{restaurant.name}</h2>
-                    <span className="text-mesa-orange font-bold text-sm">{restaurant.priceRange}</span>
-                  </div>
-
-                  <p className="text-gray-500 text-sm mb-3 uppercase tracking-wider">{restaurant.cuisine}</p>
-
-                  <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
-                    <MapPin size={16} />
-                    <span className="truncate">{restaurant.address}</span>
-                  </div>
-
-                  <button className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-md flex justify-between items-center">
-                    <span>Ver Mesa</span>
-                    <Clock size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
-          <MapContainer center={center} zoom={13} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {filteredRestaurants.map(restaurant => (
-              restaurant.lat && restaurant.lng && (
-                <Marker key={restaurant.id} position={[restaurant.lat, restaurant.lng]} icon={icons[restaurant.availability] || icons.high}>
-                  <Popup>
-                    <div className="text-center">
-                      <h3 className="font-bold text-lg">{restaurant.name}</h3>
-                      <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
-                      <div className={`mt-1 text-xs font-bold ${restaurant.availability === 'high' ? 'text-green-600' :
-                        restaurant.availability === 'medium' ? 'text-yellow-600' : 'text-red-600'
-                        }`}>
-                        {restaurant.availability === 'high' ? 'Alta Disponibilidad' :
-                          restaurant.availability === 'medium' ? 'Pocos Lugares' : 'Casi Lleno'}
+          /* Map View */
+          <div className="h-full w-full" style={{ minHeight: '600px' }}>
+            <MapContainer
+              center={center}
+              zoom={13}
+              style={{ height: '100%', width: '100%' }}
+              scrollWheelZoom={true}
+              whenReady={() => {
+                console.log('Map is ready!');
+              }}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              {filteredRestaurants.map(restaurant => (
+                restaurant.lat && restaurant.lng && (
+                  <Marker key={restaurant.id} position={[restaurant.lat, restaurant.lng]} icon={icons[restaurant.availability] || icons.high}>
+                    <Popup>
+                      <div className="text-center">
+                        <h3 className="font-bold text-lg">{restaurant.name}</h3>
+                        <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
+                        <div className={`mt-1 text-xs font-bold ${restaurant.availability === 'high' ? 'text-green-600' :
+                          restaurant.availability === 'medium' ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                          {restaurant.availability === 'high' ? 'Alta Disponibilidad' :
+                            restaurant.availability === 'medium' ? 'Pocos Lugares' : 'Casi Lleno'}
+                        </div>
+                        <button
+                          onClick={() => onSelectRestaurant(restaurant.id)}
+                          className="mt-2 bg-mesa-orange text-white px-4 py-2 rounded-lg text-sm font-bold"
+                        >
+                          Ver Mesas
+                        </button>
                       </div>
-                      <button
-                        onClick={() => onSelectRestaurant(restaurant.id)}
-                        className="mt-2 bg-mesa-orange text-white px-4 py-2 rounded-lg text-sm font-bold"
-                      >
-                        Ver Mesas
-                      </button>
-                    </div>
-                  </Popup>
-                </Marker>
-              )
-            ))}
+                    </Popup>
+                  </Marker>
+                )
+              ))}
 
-            {/* Legend */}
-            <div className="leaflet-bottom leaflet-right m-4 bg-white p-3 rounded-xl shadow-lg border border-gray-100 z-[1000]">
-              <h4 className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Disponibilidad</h4>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-xs font-medium text-gray-700">Alta</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <span className="text-xs font-medium text-gray-700">Media</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span className="text-xs font-medium text-gray-700">Baja</span>
+              {/* Legend */}
+              <div className="leaflet-bottom leaflet-right m-4 bg-white p-3 rounded-xl shadow-lg border border-gray-100 z-[1000]">
+                <h4 className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Disponibilidad</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span className="text-xs font-medium text-gray-700">Alta</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <span className="text-xs font-medium text-gray-700">Media</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <span className="text-xs font-medium text-gray-700">Baja</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </MapContainer>
+            </MapContainer>
+          </div>
         )}
       </div>
     </div>
