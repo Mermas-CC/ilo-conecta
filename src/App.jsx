@@ -1,4 +1,5 @@
-import { Routes, Route, Link, useNavigate, Outlet, useParams, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Outlet, useParams, Navigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import RestaurantList from './components/RestaurantList';
 import RestaurantDetail from './components/RestaurantDetail';
@@ -9,12 +10,38 @@ import PrivateRoute from './components/PrivateRoute';
 import Sidebar from './components/Sidebar';
 import Experience from './components/Experience';
 import ExpressReservation from './components/ExpressReservation';
-
 import MobileNav from './components/MobileNav';
+import LoadingSpinner from './components/LoadingSpinner';
 
 function Layout() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setShowLoader(false);
+
+    // Only show loader if loading takes longer than 200ms
+    const loaderTimer = setTimeout(() => {
+      if (isLoading) {
+        setShowLoader(true);
+      }
+    }, 200);
+
+    // Complete loading after a short delay for smooth transition
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+      setShowLoader(false);
+    }, 300);
+
+    return () => {
+      clearTimeout(loaderTimer);
+      clearTimeout(loadingTimer);
+    };
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -53,8 +80,11 @@ function Layout() {
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-4 md:p-8 overflow-y-auto">
-          <Outlet />
+        <div className="flex-1 p-4 md:p-8 pb-20 md:pb-0 overflow-y-auto relative">
+          {showLoader && <LoadingSpinner />}
+          <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100 animate-fade-in'}`}>
+            <Outlet />
+          </div>
         </div>
       </main>
       <MobileNav />

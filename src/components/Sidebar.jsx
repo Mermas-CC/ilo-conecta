@@ -13,12 +13,12 @@ const Sidebar = () => {
         <aside className="hidden md:flex w-72 bg-white min-h-screen p-8 flex-col border-r border-gray-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 sticky top-0 h-screen overflow-y-auto">
             {/* Logo Area */}
             <div className="mb-12 flex items-center gap-3 px-2">
-                <div className="w-10 h-10 bg-mesa-orange rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-orange-200 shadow-lg">
-                    M
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-gray-800 tracking-tight">Mesa Libre</h1>
-                    <p className="text-xs text-gray-400 font-medium tracking-wide">RESERVATIONS</p>
+                {/* Logo & Brand */}
+                <div className="mb-10">
+                    <div className="flex items-center gap-3 mb-2">
+                        <img src="/logo.png" alt="Mesa Libre" className="h-12 w-auto" />
+                    </div>
+                    <p className="text-xs text-gray-400 font-medium">Reserva tu mesa perfecta</p>
                 </div>
             </div>
 

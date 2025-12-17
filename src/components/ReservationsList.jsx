@@ -81,14 +81,14 @@ function ReservationsList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pb-4">
-          {reservations.map(reservation => (
-            <div key={reservation.id} className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col relative group">
+          {reservations.map((reservation) => (
+            <div key={reservation.id} className="stagger-item bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 flex flex-col">
               {/* Header with Image Background */}
               <div className="h-32 relative overflow-hidden">
                 <div className="absolute inset-0">
-                  <img 
-                    src={reservation.restaurantImage} 
-                    alt={reservation.restaurantName} 
+                  <img
+                    src={reservation.restaurantImage}
+                    alt={reservation.restaurantName}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>

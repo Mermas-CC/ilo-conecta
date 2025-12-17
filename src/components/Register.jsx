@@ -47,63 +47,68 @@ function Register() {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")' }}>
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
 
-      <div className="relative z-10 w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/50">
+      <div className="relative z-10 w-full max-w-md p-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img src="/logo.png" alt="Mesa Libre" className="h-20 w-auto drop-shadow-lg" />
+        </div>
+
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-mesa-orange mb-2">Crear Cuenta</h1>
+          <h1 className="text-3xl font-bold text-mesa-text mb-2">Crear Cuenta</h1>
           <p className="text-gray-600">Únete a Mesa Libre y reserva fácil</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-700 ml-1 mb-1">Nombre Completo</label>
+            <label className="block text-sm font-bold text-gray-700 ml-1 mb-2">Nombre Completo</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-5 py-3 rounded-xl border-2 border-transparent bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all"
+              className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white/80 shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all placeholder:text-gray-400"
               placeholder="Juan Pérez"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 ml-1 mb-1">Email</label>
+            <label className="block text-sm font-bold text-gray-700 ml-1 mb-2">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-5 py-3 rounded-xl border-2 border-transparent bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all"
+              className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white/80 shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all placeholder:text-gray-400"
               placeholder="tu@email.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 ml-1 mb-1">Contraseña</label>
+            <label className="block text-sm font-bold text-gray-700 ml-1 mb-2">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength="6"
-              className="w-full px-5 py-3 rounded-xl border-2 border-transparent bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all"
-              placeholder="••••••••"
+              className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white/80 shadow-sm focus:outline-none focus:ring-2 focus:ring-mesa-orange focus:border-transparent transition-all placeholder:text-gray-400"
+              placeholder="Mínimo 6 caracteres"
             />
           </div>
-          {error && <div className="p-3 bg-red-100 text-red-600 rounded-lg text-sm font-medium text-center">{error}</div>}
+          {error && <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium text-center">{error}</div>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 font-bold text-white bg-mesa-orange rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-4 font-bold text-white bg-gradient-to-r from-mesa-orange to-orange-600 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {loading ? 'Registrando...' : 'Crear Cuenta'}
+            {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
           </button>
         </form>
 
         <p className="mt-8 text-sm text-center text-gray-600">
           ¿Ya tienes una cuenta?{' '}
-          <Link to="/login" className="font-bold text-mesa-orange hover:underline">
+          <Link to="/login" className="font-bold text-mesa-orange hover:text-orange-600 hover:underline transition-colors">
             Inicia sesión aquí
           </Link>
         </p>

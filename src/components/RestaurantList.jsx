@@ -153,8 +153,8 @@ function RestaurantList({ onSelectRestaurant }) {
             {filteredRestaurants.map(restaurant => (
               <div
                 key={restaurant.id}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-mesa-sidebar h-fit"
                 onClick={() => onSelectRestaurant(restaurant.id)}
+                className="stagger-item group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100 hover:border-mesa-orange hover:scale-[1.02] transform"
               >
                 <div className="relative h-48">
                   <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
