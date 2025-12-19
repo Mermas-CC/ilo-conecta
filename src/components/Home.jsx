@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaMapMarkedAlt, FaQrcode, FaGlobe, FaLaptop, FaUtensils, FaHotel, FaPlane, FaCalendarAlt, FaUserTie, FaMicrophone, FaSearch } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function Home() {
     const [routes, setRoutes] = useState([]);
@@ -15,9 +16,7 @@ export default function Home() {
 
     const fetchRoutes = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/routes`);
-            const data = await response.json();
+            const data = await apiService.get('/routes');
             setRoutes(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching routes:', error);
@@ -27,9 +26,7 @@ export default function Home() {
 
     const fetchEvents = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/events`);
-            const data = await response.json();
+            const data = await apiService.get('/events');
             setEvents(Array.isArray(data) ? data.slice(0, 2) : []);
         } catch (error) {
             console.error('Error fetching events:', error);
@@ -68,8 +65,8 @@ export default function Home() {
     return (
         <PageTransition>
             <div className="min-h-screen pb-20">
-                {/* Header */}
-                <header className="bg-white shadow-sm sticky top-0 z-40">
+                {/* Header - Solo visible en móvil, DesktopNav se encarga de escritorio */}
+                <header className="bg-white shadow-sm sticky top-0 z-40 lg:hidden">
                     <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <img
@@ -172,26 +169,29 @@ export default function Home() {
                 </section>
 
                 {/* Planifica tu Ruta */}
-                <section className="px-4 pb-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Planifica tu Ruta</h3>
-                    <div className="grid grid-cols-1 gap-4">
+                <section className="px-4 pb-12 max-w-screen-xl mx-auto">
+                    <h3 className="text-2xl font-black text-gray-800 mb-6 flex items-center">
+                        <span className="w-8 h-8 bg-primary-500 rounded-lg mr-3 shadow-lg shadow-primary-500/20"></span>
+                        Planifica tu Ruta
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {planCategories.map((category, index) => (
                             <Link
                                 key={index}
                                 to={category.link}
-                                className="relative rounded-2xl overflow-hidden h-32 group"
+                                className="relative rounded-[32px] overflow-hidden h-60 group shadow-xl hover:shadow-2xl transition-all duration-500"
                             >
                                 <img
                                     src={category.image}
                                     alt={category.label}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center p-4">
-                                    <div className="flex items-center space-x-3 text-white">
-                                        <div className="bg-white/20 backdrop-blur-sm p-3 rounded-full">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                                    <div className="flex items-center space-x-4 text-white transform group-hover:translate-x-2 transition-transform">
+                                        <div className="bg-white/20 backdrop-blur-md p-4 rounded-2xl border border-white/20">
                                             <category.icon size={24} />
                                         </div>
-                                        <span className="text-xl font-bold">{category.label}</span>
+                                        <span className="text-2xl font-black uppercase tracking-tight">{category.label}</span>
                                     </div>
                                 </div>
                             </Link>
@@ -201,25 +201,28 @@ export default function Home() {
 
                 {/* Experiencias y Eventos */}
                 {events.length > 0 && (
-                    <section className="px-4 pb-6">
-                        <h3 className="text-xl font-bold text-gray-800 mb-4">Experiencias y Eventos</h3>
-                        <div className="space-y-3">
+                    <section className="px-4 pb-12 max-w-screen-xl mx-auto">
+                        <h3 className="text-2xl font-black text-gray-800 mb-6 flex items-center">
+                            <span className="w-8 h-8 bg-cyan-500 rounded-lg mr-3 shadow-lg shadow-cyan-500/20"></span>
+                            Experiencias y Eventos
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {events.map((event) => (
                                 <Link
                                     key={event.id}
                                     to={`/events/${event.id}`}
-                                    className="block"
+                                    className="block group"
                                 >
-                                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition flex items-center space-x-4">
-                                        <div className="bg-primary-100 p-4 rounded-lg">
-                                            <FaCalendarAlt className="text-primary-600" size={24} />
+                                    <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 group-hover:shadow-xl group-hover:border-primary-100 transition-all duration-300 flex items-center space-x-6">
+                                        <div className="bg-primary-50 p-6 rounded-2xl group-hover:bg-primary-500 group-hover:text-white transition-colors duration-300">
+                                            <FaCalendarAlt size={32} />
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="font-semibold text-gray-800">{event.title}</h4>
-                                            <p className="text-sm text-gray-500">
+                                            <h4 className="font-black text-xl text-gray-800 group-hover:text-primary-600 transition-colors">{event.title}</h4>
+                                            <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">
                                                 {new Date(event.date).toLocaleDateString('es-PE', {
                                                     day: 'numeric',
-                                                    month: 'short',
+                                                    month: 'long',
                                                     year: 'numeric'
                                                 })}
                                             </p>
@@ -231,15 +234,34 @@ export default function Home() {
                     </section>
                 )}
 
-                {/* Footer Button */}
-                <section className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+                {/* Footer Button - Solo visible en móvil, oculto en Desktop por DesktopNav */}
+                <section className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-200 p-4 lg:hidden z-40">
                     <Link
                         to="/safety"
-                        className="block w-full bg-gray-100 text-gray-700 py-3 rounded-full text-center font-semibold hover:bg-gray-200 transition"
+                        className="block w-full bg-primary-500 text-white py-4 rounded-2xl text-center font-black uppercase tracking-widest text-xs hover:bg-primary-600 shadow-lg shadow-primary-500/20 transition-all"
                     >
                         Consejos y Seguridad
                     </Link>
                 </section>
+
+                {/* Footer Desktop */}
+                <footer className="hidden lg:block bg-white border-t border-gray-100 py-12 mt-12">
+                    <div className="max-w-screen-xl mx-auto px-6 text-center">
+                        <div className="flex items-center justify-center space-x-2 mb-6">
+                            <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center text-white">I</div>
+                            <span className="text-lg font-black text-gray-800">Ilo<span className="text-primary-500">Conecta</span></span>
+                        </div>
+                        <p className="text-gray-400 text-sm font-medium italic">"Conectando la ciudad puerto con el mundo"</p>
+                        <div className="mt-8 pt-8 border-t border-gray-50 flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+                            <span>© 2025 Ilo Conecta</span>
+                            <div className="flex space-x-6">
+                                <Link to="/safety" className="hover:text-primary-500">Seguridad</Link>
+                                <Link to="/privacy" className="hover:text-primary-500">Privacidad</Link>
+                                <Link to="/terms" className="hover:text-primary-500">Términos</Link>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </PageTransition>
     );

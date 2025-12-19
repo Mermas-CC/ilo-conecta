@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaSuitcase, FaPhone, FaExternalLinkAlt } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function Agencies() {
     const [agencies, setAgencies] = useState([]);
@@ -13,9 +14,7 @@ export default function Agencies() {
 
     const fetchAgencies = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/agencies`);
-            const data = await response.json();
+            const data = await apiService.get('/agencies');
             setAgencies(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching agencies:', error);

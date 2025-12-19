@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Clock, MapPin, Star, ArrowRight, CheckCircle } from 'lucide-react';
+import apiService from '../services/apiService';
 
 function ExpressReservation() {
     const [guests, setGuests] = useState(2);
@@ -39,14 +38,7 @@ function ExpressReservation() {
             // Format time correctly (HH:mm)
             // Simple fix for single digit hours if needed, though getHours returns 0-23
 
-            const API_URL = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${API_URL}/search/availability?date=${date}&time=${time}&guests=${guests}`);
-
-            if (!response.ok) {
-                throw new Error('Error al buscar mesas disponibles');
-            }
-
-            const data = await response.json();
+            const data = await apiService.get(`/search/availability?date=${date}&time=${time}&guests=${guests}`);
             setResults(data);
         } catch (err) {
             setError(err.message);

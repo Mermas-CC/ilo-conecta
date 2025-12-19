@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft, FaQrcode, FaCamera, FaTimes, FaSearch, FaStop } from 'react-icons/fa';
 import { Html5Qrcode } from 'html5-qrcode';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function QRScanner() {
     const [isScanning, setIsScanning] = useState(false);
@@ -70,13 +71,7 @@ export default function QRScanner() {
         setIsScanning(true); // Show loader during validation
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/attractions/qr/${code}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Código no reconocido');
-            }
+            const data = await apiService.get(`/attractions/qr/${code}`);
 
             // Redirect to the attraction detail
             navigate(`/attractions/${data.id}`);

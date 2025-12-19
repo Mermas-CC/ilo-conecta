@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaGoogle, FaFacebook, FaSuitcase, FaHome, FaUtensils, FaTree, FaUmbrellaBeach, FaPaintBrush, FaHiking, FaSpa } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 const interestOptions = [
   { id: 'gastronomia', label: 'Gastronomía', icon: FaUtensils },
@@ -56,24 +57,13 @@ function Register() {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          isTourist,
-          interests: selectedInterests
-        }),
+      await apiService.post('/auth/register', {
+        name,
+        email,
+        password,
+        isTourist,
+        interests: selectedInterests
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al registrar');
-      }
 
       navigate('/login');
     } catch (err) {
@@ -156,7 +146,7 @@ function Register() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
-                placeholder="Correo Electóinico"
+                placeholder="Correo Electrónico"
               />
             </div>
 
@@ -168,7 +158,7 @@ function Register() {
                 required
                 minLength="6"
                 className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
-                placeholder="Constarenaa"
+                placeholder="Contraseña"
               />
             </div>
 
@@ -180,7 +170,7 @@ function Register() {
                 required
                 minLength="6"
                 className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
-                placeholder="Confirmar Constrenaaa"
+                placeholder="Confirmar Contraseña"
               />
             </div>
 
@@ -222,8 +212,8 @@ function Register() {
                     type="button"
                     onClick={() => toggleInterest(interest.id)}
                     className={`flex flex-col items-center py-3 px-2 rounded-lg border-2 transition ${selectedInterests.includes(interest.id)
-                        ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
                       }`}
                   >
                     <interest.icon size={20} className="mb-1" />

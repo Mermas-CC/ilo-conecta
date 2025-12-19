@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaGoogle, FaFacebook, FaArrowLeft } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -24,18 +25,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al iniciar sesión');
-      }
+      const data = await apiService.post('/auth/login', { email, password });
 
       login(data.user, data.token);
       navigate('/');

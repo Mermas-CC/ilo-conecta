@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarkerAlt, FaFilter, FaSearch } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function Attractions() {
     const [attractions, setAttractions] = useState([]);
@@ -18,13 +19,11 @@ export default function Attractions() {
     const fetchAttractions = async () => {
         try {
             setLoading(true);
-            const apiUrl = import.meta.env.VITE_API_URL;
-            let url = `${apiUrl}/attractions`;
+            let endpoint = '/attractions';
             if (selectedCategory !== 'Todos') {
-                url += `?category=${selectedCategory}`;
+                endpoint += `?category=${selectedCategory}`;
             }
-            const response = await fetch(url);
-            const data = await response.json();
+            const data = await apiService.get(endpoint);
             setAttractions(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching attractions:', error);
@@ -35,8 +34,8 @@ export default function Attractions() {
     };
 
     const filteredAttractions = attractions.filter(attr =>
-        attr.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        attr.description.toLowerCase().includes(searchQuery.toLowerCase())
+        (attr.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (attr.description?.toLowerCase() || '').includes(searchQuery.toLowerCase())
     );
 
     return (

@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarkerAlt, FaClock, FaQrcode, FaChevronRight } from 'react-icons/fa';
 import { QRCodeSVG } from 'qrcode.react';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function AttractionDetail() {
     const { id } = useParams();
@@ -17,9 +18,7 @@ export default function AttractionDetail() {
 
     const fetchAttractionDetail = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/attractions/${id}`);
-            const data = await response.json();
+            const data = await apiService.get(`/attractions/${id}`);
             setAttraction(data);
         } catch (error) {
             console.error('Error fetching attraction detail:', error);

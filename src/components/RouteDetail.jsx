@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarkerAlt, FaClock, FaPlay, FaUtensils, FaCameraRetro } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function RouteDetail() {
     const { id } = useParams();
@@ -16,9 +17,7 @@ export default function RouteDetail() {
 
     const fetchRoute = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/routes/${id}`);
-            const data = await response.json();
+            const data = await apiService.get(`/routes/${id}`);
             setRoute(data);
         } catch (error) {
             console.error('Error fetching route:', error);

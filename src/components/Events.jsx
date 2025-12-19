@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaArrowLeft, FaCalendar, FaMapMarkerAlt, FaTicketAlt } from 'react-icons/fa';
+import { FaArrowLeft, FaCalendar, FaMapMarkerAlt, FaTicketAlt, FaCalendarAlt } from 'react-icons/fa';
 import PageTransition from './PageTransition';
+import apiService from '../services/apiService';
 
 export default function Events() {
     const [events, setEvents] = useState([]);
@@ -13,9 +14,7 @@ export default function Events() {
 
     const fetchEvents = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/events`);
-            const data = await response.json();
+            const data = await apiService.get('/events');
             setEvents(data);
         } catch (error) {
             console.error('Error fetching events:', error);

@@ -3,7 +3,6 @@ import { useAuth } from './context/AuthContext';
 import Home from './components/Home';
 import RestaurantList from './components/RestaurantList';
 import RestaurantDetail from './components/RestaurantDetail';
-import ReservationsList from './components/ReservationsList';
 import Hotels from './components/Hotels';
 import Events from './components/Events';
 import RoutesPage from './components/Routes';
@@ -17,11 +16,13 @@ import Register from './components/Register';
 import Agencies from './components/Agencies';
 import PrivateRoute from './components/PrivateRoute';
 import MobileNav from './components/MobileNav';
+import DesktopNav from './components/DesktopNav';
 
 function Layout() {
   return (
     <div className="min-h-screen bg-ilo-bg">
-      <main className="pb-20">
+      <DesktopNav />
+      <main className="pb-20 lg:pb-0 lg:pt-24">
         <Outlet />
       </main>
       <MobileNav />
@@ -53,11 +54,6 @@ function App() {
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/routes/:id" element={<RouteDetail />} />
         <Route path="/qr-scanner" element={<QRScanner />} />
-        <Route path="/reservations" element={
-          <PrivateRoute>
-            <ReservationsList />
-          </PrivateRoute>
-        } />
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />

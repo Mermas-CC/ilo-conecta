@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { QRCodeSVG } from 'qrcode.react';
 import { Calendar, Clock, Users, Armchair, QrCode, XCircle, Trash2 } from 'lucide-react';
+import apiService from '../services/apiService';
 
 function ReservationsList() {
   const [reservations, setReservations] = useState([]);
@@ -19,14 +17,11 @@ function ReservationsList() {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${API_URL}/reservations`, {
+      const data = await apiService.get('/reservations', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      if (!response.ok) throw new Error('Error al cargar reservaciones');
-      const data = await response.json();
       setReservations(data);
     } catch (err) {
       setError(err.message);
@@ -42,18 +37,11 @@ function ReservationsList() {
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${API_URL}/reservations/${id}`, {
-        method: 'DELETE',
+      await apiService.delete(`/reservations/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Error al cancelar reservación');
-      }
 
       fetchReservations();
     } catch (err) {

@@ -1,36 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { FaUser, FaHistory, FaCalendarCheck, FaSignOutAlt, FaChevronRight, FaQrcode, FaShieldAlt, FaQuestionCircle } from 'react-icons/fa';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { FaUser, FaChevronRight, FaQrcode, FaSignOutAlt, FaShieldAlt, FaQuestionCircle, FaUmbrellaBeach } from 'react-icons/fa';
 import PageTransition from './PageTransition';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function Profile() {
-    const { user, logout, token } = useAuth();
-    const [reservations, setReservations] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        fetchReservations();
-    }, []);
-
-    const fetchReservations = async () => {
-        try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/reservations`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await response.json();
-            setReservations(data);
-        } catch (error) {
-            console.error('Error fetching reservations:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleLogout = () => {
         logout();
@@ -38,7 +15,7 @@ export default function Profile() {
     };
 
     const nextTrip = {
-        destination: "Glorieta Juré Calve",
+        destination: "Glorieta José Gálvez",
         date: "15 Nov",
         time: "4:00 PM",
         image: "https://images.unsplash.com/photo-1533093818801-90dd2b6e0a00?w=600",
@@ -65,7 +42,7 @@ export default function Profile() {
                 </div>
 
                 <div className="max-w-screen-xl mx-auto px-6 space-y-6">
-                    {/* Featured Itinerary Item with QR (Reference Screen Right) */}
+                    {/* Featured Itinerary Item with QR */}
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                         <div className="flex justify-between items-start mb-4">
                             <h3 className="font-bold text-gray-800">Próximo Destino</h3>
@@ -79,46 +56,26 @@ export default function Profile() {
                                     <h4 className="text-white font-bold text-lg">{nextTrip.destination}</h4>
                                     <p className="text-white/80 text-xs">Punto de interés histórico</p>
                                 </div>
-                                <div className="bg-white p-2 rounded-lg">
+                                <div className="bg-white p-2 rounded-lg shadow-lg">
                                     <QRCodeSVG value={nextTrip.qr} size={50} />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex divide-x divide-gray-100">
-                            <div className="flex-1 pr-4">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Hospedaje</p>
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-primary-500">
-                                        <FaCalendarCheck size={14} />
-                                    </div>
-                                    <div>
-                                        <h5 className="text-sm font-bold text-gray-800">Hostal Puerto Inglés</h5>
-                                        <p className="text-[10px] text-gray-500 font-medium">Check in: 15 Nov</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex-1 pl-4">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Cena</p>
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-primary-500">
-                                        <FaUser size={14} />
-                                    </div>
-                                    <div>
-                                        <h5 className="text-sm font-bold text-gray-800">Nayal Restaurante</h5>
-                                        <p className="text-[10px] text-gray-500 font-medium">Reserva: 8:00 PM</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 italic">
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Nota del viajero</p>
+                            <p className="text-sm text-gray-600 font-medium leading-relaxed">
+                                "No olvidar visitar el muelle histórico al atardecer para las mejores fotos de la bahía."
+                            </p>
                         </div>
                     </div>
 
-                    {/* Settings / Navigation */}
+                    {/* Navigation */}
                     <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-                        <Link to="/reservations" className="flex items-center justify-between p-5 border-b border-gray-50 hover:bg-gray-50 transition">
+                        <Link to="/attractions" className="flex items-center justify-between p-5 border-b border-gray-50 hover:bg-gray-50 transition">
                             <div className="flex items-center space-x-4">
-                                <div className="bg-blue-50 p-3 rounded-xl text-blue-500"><FaHistory /></div>
-                                <span className="font-bold text-gray-700">Mis Reservaciones</span>
+                                <div className="bg-primary-50 p-3 rounded-xl text-primary-500"><FaUmbrellaBeach /></div>
+                                <span className="font-bold text-gray-700">Explorar Atractivos</span>
                             </div>
                             <FaChevronRight size={14} className="text-gray-300" />
                         </Link>
@@ -143,7 +100,7 @@ export default function Profile() {
                         </button>
                     </div>
 
-                    {/* Help & Safety Button (Bottom from reference) */}
+                    {/* Help & Safety Button */}
                     <div className="flex gap-4">
                         <Link to="/safety" className="flex-1 flex items-center justify-center space-x-2 h-14 bg-primary-500 text-white rounded-full font-bold shadow-lg hover:shadow-xl transition">
                             <span>Consejos y Seguridad</span>

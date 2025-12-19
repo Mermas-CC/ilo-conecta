@@ -1,31 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { Search, Map as MapIcon, List, UtensilsCrossed, Star, Coffee, MapPin, Clock, Fish, Flame, Beer, ArrowLeft, Mic } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { MapPin, Star, UtensilsCrossed, Fish, Flame, Coffee, ArrowLeft, Search, Mic, Clock } from 'lucide-react';
 import PageTransition from './PageTransition';
-
-// Fix for default marker icon
-const createMarkerIcon = (color) => L.divIcon({
-  className: 'custom-marker',
-  html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="${color}" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin drop-shadow-lg"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -40]
-});
-
-const icons = {
-  high: createMarkerIcon('#00bcd4'), // Ilo Cyan
-  medium: createMarkerIcon('#eab308'), // Yellow
-  low: createMarkerIcon('#ef4444'), // Red
-};
+import apiService from '../services/apiService';
 
 function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
   const [selectedCategory, setSelectedCategory] = useState('Todo');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
@@ -36,18 +18,8 @@ function RestaurantList() {
 
   const fetchRestaurants = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${apiUrl}/restaurants`);
-      if (!response.ok) throw new Error('Error al cargar restaurantes');
-      const data = await response.json();
-
-      // Simulate availability for demonstration
-      const dataWithAvailability = data.map(r => ({
-        ...r,
-        availability: Math.random() > 0.6 ? 'high' : (Math.random() > 0.3 ? 'medium' : 'low')
-      }));
-
-      setRestaurants(dataWithAvailability);
+      const data = await apiService.get('/restaurants');
+      setRestaurants(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -71,8 +43,8 @@ function RestaurantList() {
 
   const filteredRestaurants = useMemo(() => {
     return restaurants.filter(r => {
-      const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.cuisine.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = (r.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (r.cuisine?.toLowerCase() || '').includes(searchQuery.toLowerCase());
 
       if (!matchesSearch) return false;
       if (selectedCategory === 'Todo') return true;
@@ -89,8 +61,8 @@ function RestaurantList() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-ilo-bg pb-20">
-        {/* Header - Ilo Conecta Style */}
-        <header className="bg-white shadow-sm sticky top-0 z-40">
+        {/* Header - Ilo Conecta Style - Solo móvil */}
+        <header className="bg-white shadow-sm sticky top-0 z-40 lg:hidden">
           <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Link to="/" className="text-gray-600">
@@ -98,19 +70,11 @@ function RestaurantList() {
               </Link>
               <h1 className="text-xl font-bold text-gray-800">Ilo Conecta</h1>
             </div>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
-                className="p-2 bg-primary-100 text-primary-600 rounded-full"
-              >
-                {viewMode === 'list' ? <MapIcon size={20} /> : <List size={20} />}
-              </button>
-            </div>
           </div>
         </header>
 
-        {/* Featured Filter Tabs (from reference) */}
-        <div className="px-4 py-4 flex space-x-3 overflow-x-auto no-scrollbar">
+        {/* Featured Filter Tabs */}
+        <div className="px-4 py-4 flex space-x-3 overflow-x-auto no-scrollbar max-w-screen-xl mx-auto">
           {featuredTabs.map((tab, idx) => (
             <div key={idx} className={`${tab.color} text-white px-4 py-3 rounded-2xl flex-shrink-0 text-sm font-semibold shadow-sm`}>
               {tab.label}
@@ -119,7 +83,7 @@ function RestaurantList() {
         </div>
 
         {/* Search Bar - Ilo Conecta Style */}
-        <div className="px-4 mb-6">
+        <div className="max-w-screen-xl mx-auto px-4 mb-6">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="text-gray-400" size={20} />
@@ -138,7 +102,7 @@ function RestaurantList() {
         </div>
 
         {/* Categories Grid */}
-        <div className="px-4 mb-8">
+        <div className="max-w-screen-xl mx-auto px-4 mb-8">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Restaurantes</h2>
           <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
             {categories.map((cat) => (
@@ -158,115 +122,76 @@ function RestaurantList() {
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="px-4">
-          {viewMode === 'list' ? (
-            <div className="space-y-6">
-              {filteredRestaurants.map(restaurant => (
-                <div
-                  key={restaurant.id}
-                  className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100"
-                >
-                  <div className="relative h-48">
-                    <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                      <Star size={12} className="text-yellow-400 fill-yellow-400" /> {restaurant.rating}
-                    </div>
-                  </div>
-
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-800">{restaurant.name}</h3>
-                    <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-                      <MapPin size={14} className="text-primary-500" />
-                      <span>{restaurant.location || restaurant.address.split(',')[0]}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1 text-sm font-medium text-gray-600">
-                        <span>{restaurant.priceRange}</span>
-                        <span>•</span>
-                        <span>{restaurant.cuisine}</span>
-                      </div>
-                      <Link
-                        to={`/restaurants/${restaurant.id}`}
-                        className="bg-primary-500 hover:bg-primary-600 text-white font-bold px-6 py-2 rounded-full text-sm transition-all"
-                      >
-                        Reservar Mesa
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {filteredRestaurants.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  No se encontraron restaurantes que coincidan con tu búsqueda.
-                </div>
-              )}
-            </div>
-          ) : (
-            /* Map View */
-            <div className="h-[500px] w-full rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
-              <MapContainer
-                center={[-17.6395, -71.3375]}
-                zoom={14}
-                style={{ height: '100%', width: '100%' }}
-                scrollWheelZoom={true}
+        {/* Content Area - Pure List Layout */}
+        <div className="max-w-screen-xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredRestaurants.map(restaurant => (
+              <div
+                key={restaurant.id}
+                className="bg-white rounded-[32px] shadow-sm overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 group"
               >
-                <TileLayer
-                  attribution='&copy; OpenStreetMap'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {filteredRestaurants.map(restaurant => (
-                  <Marker
-                    key={restaurant.id}
-                    position={[-17.6395 + (Math.random() - 0.5) * 0.02, -71.3375 + (Math.random() - 0.5) * 0.02]}
-                    icon={icons[restaurant.availability] || icons.high}
-                  >
-                    <Popup>
-                      <div className="text-center p-1">
-                        <h3 className="font-bold">{restaurant.name}</h3>
-                        <p className="text-xs text-gray-600 mb-2">{restaurant.cuisine}</p>
-                        <Link
-                          to={`/restaurants/${restaurant.id}`}
-                          className="bg-primary-500 text-white px-3 py-1 rounded-full text-xs font-bold block"
-                        >
-                          Ver Detalles
-                        </Link>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </div>
-          )}
-        </div>
-
-        {/* Extra Section: Sertificattos (from reference) */}
-        {viewMode === 'list' && (
-          <div className="px-4 mt-8 pb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Certificados</h2>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-              <div className="flex-shrink-0 w-48 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
-                <div className="bg-yellow-100 p-3 rounded-full text-yellow-600">
-                  <Star size={24} />
+                <div className="relative h-56">
+                  <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <Star size={14} className="text-yellow-400 fill-yellow-400" /> {restaurant.rating}
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 text-sm">Calidad Premium</h4>
-                  <p className="text-[10px] text-gray-500 italic">Ilo Conecta Verified</p>
+
+                <div className="p-6 h-full flex flex-col">
+                  <h3 className="text-xl font-black text-gray-800 mb-2 truncate">{restaurant.name}</h3>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400 font-bold mb-6">
+                    <MapPin size={16} className="text-primary-500" />
+                    <span className="uppercase tracking-wider">{restaurant.location || restaurant.address.split(',')[0]}</span>
+                  </div>
+
+                  <div className="mt-auto flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1.5 rounded-full">
+                      <span>{restaurant.priceRange}</span>
+                      <span className="text-gray-300">•</span>
+                      <span>{restaurant.cuisine}</span>
+                    </div>
+                    <Link
+                      to={`/restaurants/${restaurant.id}`}
+                      className="bg-primary-500 hover:bg-primary-600 text-white font-black px-6 py-2.5 rounded-2xl text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 active:scale-95 whitespace-nowrap"
+                    >
+                      Ver detalles
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <div className="flex-shrink-0 w-48 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
-                <div className="bg-green-100 p-3 rounded-full text-green-600">
-                  <Clock size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 text-sm">Siempre Abierto</h4>
-                  <p className="text-[10px] text-gray-500 italic">Horarios Flexibles</p>
-                </div>
+            ))}
+            {filteredRestaurants.length === 0 && (
+              <div className="col-span-full text-center py-20 bg-white rounded-[40px] border-2 border-dashed border-gray-100 p-8">
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">No se encontraron sabores...</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Extra Section: Sertificattos */}
+        <div className="max-w-screen-xl mx-auto px-4 mt-12 pb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Certificados</h2>
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+            <div className="flex-shrink-0 w-48 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
+              <div className="bg-yellow-100 p-3 rounded-full text-yellow-600">
+                <Star size={24} />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800 text-sm">Calidad Premium</h4>
+                <p className="text-[10px] text-gray-500 italic">Ilo Conecta Verified</p>
+              </div>
+            </div>
+            <div className="flex-shrink-0 w-48 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
+              <div className="bg-green-100 p-3 rounded-full text-green-600">
+                <Clock size={24} />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800 text-sm">Siempre Abierto</h4>
+                <p className="text-[10px] text-gray-500 italic">Horarios Flexibles</p>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </PageTransition>
   );
