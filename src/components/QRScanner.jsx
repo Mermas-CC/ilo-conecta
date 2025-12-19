@@ -70,8 +70,8 @@ export default function QRScanner() {
         setIsScanning(true); // Show loader during validation
 
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/attractions/qr/${code}`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/attractions/qr/${code}`);
             const data = await response.json();
 
             if (!response.ok) {

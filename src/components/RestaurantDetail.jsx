@@ -59,7 +59,8 @@ function RestaurantDetail({ restaurantId, onBack }) {
 
   const fetchRestaurant = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/restaurants/${restaurantId}`);
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/restaurants/${restaurantId}`);
       if (!response.ok) throw new Error('Error al cargar restaurante');
       const data = await response.json();
       setRestaurant(data);
@@ -76,8 +77,9 @@ function RestaurantDetail({ restaurantId, onBack }) {
     setCheckingAvailability(true);
     setSelectedTable(null);
     try {
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(
-        `http://localhost:3001/api/restaurants/${restaurantId}/availability?date=${date}&time=${time}&guests=${guests}`
+        `${apiUrl}/restaurants/${restaurantId}/availability?date=${date}&time=${time}&guests=${guests}`
       );
       if (!response.ok) throw new Error('Error al verificar disponibilidad');
       const data = await response.json();

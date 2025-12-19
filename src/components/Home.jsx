@@ -15,8 +15,8 @@ export default function Home() {
 
     const fetchRoutes = async () => {
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/routes`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/routes`);
             const data = await response.json();
             setRoutes(Array.isArray(data) ? data : []);
         } catch (error) {
@@ -27,8 +27,8 @@ export default function Home() {
 
     const fetchEvents = async () => {
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/events`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/events`);
             const data = await response.json();
             setEvents(Array.isArray(data) ? data.slice(0, 2) : []);
         } catch (error) {

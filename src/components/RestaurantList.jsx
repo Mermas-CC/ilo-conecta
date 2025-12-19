@@ -36,7 +36,8 @@ function RestaurantList() {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/restaurants');
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/restaurants`);
       if (!response.ok) throw new Error('Error al cargar restaurantes');
       const data = await response.json();
 

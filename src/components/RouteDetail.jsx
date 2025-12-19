@@ -16,8 +16,8 @@ export default function RouteDetail() {
 
     const fetchRoute = async () => {
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/routes/${id}`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/routes/${id}`);
             const data = await response.json();
             setRoute(data);
         } catch (error) {

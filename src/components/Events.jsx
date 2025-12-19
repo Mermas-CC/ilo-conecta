@@ -13,7 +13,8 @@ export default function Events() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch('http://localhost:3001/api/events');
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/events`);
             const data = await response.json();
             setEvents(data);
         } catch (error) {

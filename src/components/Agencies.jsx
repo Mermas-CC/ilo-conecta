@@ -13,8 +13,8 @@ export default function Agencies() {
 
     const fetchAgencies = async () => {
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/agencies`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/agencies`);
             const data = await response.json();
             setAgencies(Array.isArray(data) ? data : []);
         } catch (error) {

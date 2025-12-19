@@ -13,8 +13,8 @@ export default function Hotels() {
 
     const fetchHotels = async () => {
         try {
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            const response = await fetch(`${baseUrl}/api/hotels`);
+            const apiUrl = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${apiUrl}/hotels`);
             const data = await response.json();
             if (Array.isArray(data)) {
                 setHotels(data);

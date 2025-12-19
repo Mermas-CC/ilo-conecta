@@ -18,8 +18,8 @@ export default function Attractions() {
     const fetchAttractions = async () => {
         try {
             setLoading(true);
-            const baseUrl = `http://${window.location.hostname}:3001`;
-            let url = `${baseUrl}/api/attractions`;
+            const apiUrl = import.meta.env.VITE_API_URL;
+            let url = `${apiUrl}/attractions`;
             if (selectedCategory !== 'Todos') {
                 url += `?category=${selectedCategory}`;
             }
