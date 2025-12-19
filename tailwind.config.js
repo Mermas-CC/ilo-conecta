@@ -4,14 +4,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'mesa-orange': '#E88D67',
-        'mesa-bg': '#FDF6E3',
-        'mesa-sidebar': '#F3E5D8',
-        'mesa-text': '#5D4037',
+        primary: {
+          50: '#e0f7fa',
+          100: '#b2ebf2',
+          200: '#80deea',
+          300: '#4dd0e1',
+          400: '#26c6da',
+          500: '#00bcd4',
+          600: '#00acc1',
+          700: '#0097a7',
+          800: '#00838f',
+          900: '#006064',
+        },
+        accent: {
+          400: '#ffd54f',
+          500: '#ffc107',
+          600: '#ffb300',
+        },
+        'ilo-cyan': '#00bcd4',
+        'ilo-accent': '#ffc107',
+        'ilo-bg': '#f8fafc',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      }
+        sans: ['Inter', 'Outfit', 'sans-serif'],
+      },
     },
   },
   plugins: [],

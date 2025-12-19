@@ -1,91 +1,28 @@
-import { Routes, Route, Link, useNavigate, Outlet, useParams, Navigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import Home from './components/Home';
 import RestaurantList from './components/RestaurantList';
 import RestaurantDetail from './components/RestaurantDetail';
 import ReservationsList from './components/ReservationsList';
+import Hotels from './components/Hotels';
+import Events from './components/Events';
+import RoutesPage from './components/Routes';
+import RouteDetail from './components/RouteDetail';
+import QRScanner from './components/QRScanner';
+import Attractions from './components/Attractions';
+import AttractionDetail from './components/AttractionDetail';
+import Profile from './components/Profile';
 import Login from './components/Login';
 import Register from './components/Register';
+import Agencies from './components/Agencies';
 import PrivateRoute from './components/PrivateRoute';
-import Sidebar from './components/Sidebar';
-import Experience from './components/Experience';
-import ExpressReservation from './components/ExpressReservation';
 import MobileNav from './components/MobileNav';
-import LoadingSpinner from './components/LoadingSpinner';
 
 function Layout() {
-  const { isAuthenticated, user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    setShowLoader(false);
-
-    // Only show loader if loading takes longer than 200ms
-    const loaderTimer = setTimeout(() => {
-      if (isLoading) {
-        setShowLoader(true);
-      }
-    }, 200);
-
-    // Complete loading after a short delay for smooth transition
-    const loadingTimer = setTimeout(() => {
-      setIsLoading(false);
-      setShowLoader(false);
-    }, 300);
-
-    return () => {
-      clearTimeout(loaderTimer);
-      clearTimeout(loadingTimer);
-    };
-  }, [location.pathname]);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <div className="flex min-h-screen bg-mesa-bg">
-      <Sidebar />
-      <main className="flex-1 flex flex-col min-w-0 bg-mesa-bg pb-20 md:pb-0">
-        {/* Header */}
-        <header className="h-16 md:h-20 px-4 md:px-8 flex items-center justify-end gap-4 bg-white/50 backdrop-blur-sm sticky top-0 z-30 border-b border-gray-100/50">
-          {isAuthenticated ? (
-            <>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-mesa-orange/10 flex items-center justify-center text-mesa-orange font-bold text-xs">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-                <span className="text-gray-600 font-medium text-sm hidden md:inline">Hola, {user.name}</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-white border border-red-100 text-red-500 hover:bg-red-50 text-xs font-bold rounded-xl transition-colors shadow-sm"
-              >
-                Salir
-              </button>
-            </>
-          ) : (
-            <Link
-              to="/login"
-              className="px-6 py-2 bg-mesa-orange text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-sm"
-            >
-              Ingresar
-            </Link>
-          )}
-        </header>
-
-        {/* Content */}
-        <div className="flex-1 p-4 md:p-8 pb-20 md:pb-0 overflow-y-auto relative">
-          {showLoader && <LoadingSpinner />}
-          <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100 animate-fade-in'}`}>
-            <Outlet />
-          </div>
-        </div>
+    <div className="min-h-screen bg-ilo-bg">
+      <main className="pb-20">
+        <Outlet />
       </main>
       <MobileNav />
     </div>
@@ -95,43 +32,55 @@ function Layout() {
 function RestaurantDetailWrapper() {
   const { id } = useParams();
   const navigate = useNavigate();
-  return <RestaurantDetail restaurantId={id} onBack={() => navigate('/')} />;
-}
-
-function HomePage() {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <RestaurantList onSelectRestaurant={(id) => navigate(`/restaurants/${id}`)} />;
+  return <RestaurantDetail restaurantId={id} onBack={() => navigate('/restaurants')} />;
 }
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="restaurants/:id" element={
-          <PrivateRoute>
-            <RestaurantDetailWrapper />
-          </PrivateRoute>
-        } />
-        <Route path="reservations" element={
-          <PrivateRoute>
-            <ReservationsList onBack={() => navigate('/')} />
-          </PrivateRoute>
-        } />
-        <Route path="experience" element={<Experience />} />
-        <Route path="express" element={<ExpressReservation />} />
-      </Route>
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/restaurants" element={<RestaurantList />} />
+        <Route path="/restaurants/:id" element={<RestaurantDetailWrapper />} />
+        <Route path="/hotels" element={<Hotels />} />
+        <Route path="/agencies" element={<Agencies />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/:id" element={<Events />} />
+        <Route path="/routes" element={<RoutesPage />} />
+        <Route path="/routes/:id" element={<RouteDetail />} />
+        <Route path="/qr-scanner" element={<QRScanner />} />
+        <Route path="/reservations" element={
+          <PrivateRoute>
+            <ReservationsList />
+          </PrivateRoute>
+        } />
+        <Route path="/profile" element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        } />
+        {/* Attractions */}
+        <Route path="/attractions" element={<Attractions />} />
+        <Route path="/attractions/:id" element={<AttractionDetail />} />
+        <Route path="/safety" element={
+          <div className="min-h-screen bg-ilo-bg p-6">
+            <div className="max-w-md mx-auto bg-white rounded-3xl p-8 shadow-sm">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Seguridad</h2>
+              <ul className="space-y-4 text-gray-600">
+                <li className="flex items-center gap-3">🛡️ Usa bloqueador solar</li>
+                <li className="flex items-center gap-3">🛡️ Bebe agua embotellada</li>
+                <li className="flex items-center gap-3">🛡️ Cuida tus pertenencias</li>
+              </ul>
+            </div>
+          </div>
+        } />
+      </Route>
     </Routes>
   );
 }
 
 export default App;
-
