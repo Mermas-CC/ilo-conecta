@@ -37,7 +37,6 @@ export default function Home() {
     const exploreCategories = [
         { icon: FaMapMarkedAlt, label: 'Lugares', link: '/attractions', color: 'bg-primary-500' },
         { icon: FaQrcode, label: 'Escaner QR', link: '/qr-scanner', color: 'bg-primary-600' },
-        { icon: FaGlobe, label: 'Interactivos', link: '/interactive', color: 'bg-primary-700' },
         { icon: FaLaptop, label: 'Plataforma Web', link: '/', color: 'bg-primary-500' },
     ];
 
@@ -152,7 +151,7 @@ export default function Home() {
                 {/* Explora e Infórmate */}
                 <section className="px-4 pb-6">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Explora e Infórmate</h3>
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         {exploreCategories.map((category, index) => (
                             <Link
                                 key={index}
