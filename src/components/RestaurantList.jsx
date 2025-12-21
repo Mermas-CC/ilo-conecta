@@ -29,10 +29,10 @@ function RestaurantList() {
 
   const categories = [
     { name: 'Todo', icon: <UtensilsCrossed size={20} />, id: 'Todo' },
-    { name: 'Mariscos', icon: <Fish size={20} />, id: 'Marina' },
-    { name: 'Parrilla', icon: <Flame size={20} />, id: 'Parrilla' },
-    { name: 'Café', icon: <Coffee size={20} />, id: 'Café & Brunch' },
-    { name: 'Peruana', icon: <UtensilsCrossed size={20} />, id: 'Peruana' },
+    { name: 'Marinos y Pescados', icon: <Fish size={20} />, id: 'Marinos y Pescados' },
+    { name: 'Comida Criolla', icon: <UtensilsCrossed size={20} />, id: 'Comida Criolla' },
+    { name: 'Parrillas y Carnes', icon: <Flame size={20} />, id: 'Parrillas y Carnes' },
+    { name: 'Pollerías y Cafeterías', icon: <Coffee size={20} />, id: 'Pollerías y Cafeterías' },
   ];
 
   const featuredTabs = [
@@ -146,7 +146,7 @@ function RestaurantList() {
 
                   <div className="mt-auto flex items-center justify-between">
                     <div className="flex items-center space-x-2 text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1.5 rounded-full">
-                      <span>{restaurant.priceRange}</span>
+                      <span>{restaurant.pricerange}</span>
                       <span className="text-gray-300">•</span>
                       <span>{restaurant.cuisine}</span>
                     </div>

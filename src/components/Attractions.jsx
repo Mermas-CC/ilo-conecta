@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaArrowLeft, FaMapMarkerAlt, FaFilter, FaSearch } from 'react-icons/fa';
+import { FaArrowLeft, FaMapMarkerAlt, FaSearch, FaInfoCircle, FaCircle } from 'react-icons/fa';
 import PageTransition from './PageTransition';
 import apiService from '../services/apiService';
 
@@ -10,7 +10,7 @@ export default function Attractions() {
     const [selectedCategory, setSelectedCategory] = useState('Todos');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const categories = ['Todos', 'Histórico', 'Natural', 'Religioso', 'Cultura'];
+    const categories = ['Todos', 'Playas', 'Naturaleza y Fauna', 'Espacios Culturales y Urbanos', 'Zonas Emblemáticas'];
 
     useEffect(() => {
         fetchAttractions();
@@ -38,6 +38,24 @@ export default function Attractions() {
         (attr.description?.toLowerCase() || '').includes(searchQuery.toLowerCase())
     );
 
+    const getWaveColor = (status) => {
+        switch (status?.toLowerCase()) {
+            case 'tranquilo': return 'text-green-500';
+            case 'precaución': return 'text-yellow-500';
+            case 'peligroso': return 'text-red-500';
+            default: return 'text-gray-400';
+        }
+    };
+
+    const getWaveBg = (status) => {
+        switch (status?.toLowerCase()) {
+            case 'tranquilo': return 'bg-green-100 text-green-700';
+            case 'precaución': return 'bg-yellow-100 text-yellow-700';
+            case 'peligroso': return 'bg-red-100 text-red-700';
+            default: return 'bg-gray-100 text-gray-700';
+        }
+    };
+
     return (
         <PageTransition>
             <div className="min-h-screen bg-ilo-bg pb-20">
@@ -47,7 +65,7 @@ export default function Attractions() {
                         <Link to="/" className="text-gray-600 hover:text-primary-600">
                             <FaArrowLeft size={20} />
                         </Link>
-                        <h1 className="text-xl font-bold text-gray-800">Atractivos Turísticos</h1>
+                        <h1 className="text-xl font-bold text-gray-800">Lugares</h1>
                     </div>
                 </header>
 
@@ -56,13 +74,50 @@ export default function Attractions() {
                     <div className="relative mb-6">
                         <input
                             type="text"
-                            placeholder="Buscar lugares..."
+                            placeholder="Buscar en Ilo..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl shadow-sm border-none focus:ring-2 focus:ring-primary-400 transition-all font-medium text-gray-700"
                         />
                         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                     </div>
+
+                    {/* Wave Semaphore Legend - Only visible if Todos or Playas selected */}
+                    {(selectedCategory === 'Todos' || selectedCategory === 'Playas') && (
+                        <>
+                            {/* Danger Alert Banner */}
+                            <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-2xl flex items-center gap-4 shadow-sm animate-pulse">
+                                <div className="bg-red-500 p-2 rounded-full text-white">
+                                    <FaCircle size={12} className="animate-ping" />
+                                </div>
+                                <div>
+                                    <h4 className="text-red-800 font-black text-sm uppercase tracking-tight">¡Alerta de Oleaje!</h4>
+                                    <p className="text-red-600 text-xs font-bold">Bandera Roja en Puerto Inglés. Evite ingresar al mar.</p>
+                                </div>
+                            </div>
+
+                            <div className="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                                <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold">
+                                    <FaInfoCircle className="text-primary-500" />
+                                    <h3>Semáforo de oleaje</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-2xl">
+                                        <FaCircle className="text-green-500" size={12} />
+                                        <span className="text-sm font-bold text-green-700">Verde: Seguro para nadar</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-2xl">
+                                        <FaCircle className="text-yellow-500" size={12} />
+                                        <span className="text-sm font-bold text-yellow-700">Amarillo: Precaución</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 p-3 bg-red-50 rounded-2xl">
+                                        <FaCircle className="text-red-500" size={12} />
+                                        <span className="text-sm font-bold text-red-700">Rojo: Peligroso</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     {/* Categories */}
                     <div className="flex space-x-3 overflow-x-auto pb-6 no-scrollbar">
@@ -99,8 +154,34 @@ export default function Attractions() {
                                             alt={attr.name}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                         />
-                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-primary-600 uppercase">
-                                            {attr.category}
+                                        <div className="absolute top-4 left-4 flex flex-col gap-2">
+                                            <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-primary-600 uppercase shadow-sm">
+                                                {attr.category}
+                                            </div>
+                                            {attr.category === 'Playas' && (
+                                                <div className={`${getWaveBg(attr.wavestatus || (
+                                                    attr.name === 'Playa Boca del Río' ? 'Tranquilo' :
+                                                        attr.name === 'Playa Wawakiki' ? 'Precaución' :
+                                                            attr.name === 'Puerto Inglés' ? 'Peligroso' :
+                                                                attr.name === 'Playa Pozo Lisas' ? 'Tranquilo' :
+                                                                    attr.name === 'Playa Las Tres Hermanas' ? 'Tranquilo' : 'Tranquilo'
+                                                ))} backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm flex items-center gap-1`}>
+                                                    <FaCircle size={8} className={getWaveColor(attr.wavestatus || (
+                                                        attr.name === 'Playa Boca del Río' ? 'Tranquilo' :
+                                                            attr.name === 'Playa Wawakiki' ? 'Precaución' :
+                                                                attr.name === 'Puerto Inglés' ? 'Peligroso' :
+                                                                    attr.name === 'Playa Pozo Lisas' ? 'Tranquilo' :
+                                                                        attr.name === 'Playa Las Tres Hermanas' ? 'Tranquilo' : 'Tranquilo'
+                                                    ))} />
+                                                    {attr.wavestatus || (
+                                                        attr.name === 'Playa Boca del Río' ? 'Tranquilo' :
+                                                            attr.name === 'Playa Wawakiki' ? 'Precaución' :
+                                                                attr.name === 'Puerto Inglés' ? 'Peligroso' :
+                                                                    attr.name === 'Playa Pozo Lisas' ? 'Tranquilo' :
+                                                                        attr.name === 'Playa Las Tres Hermanas' ? 'Tranquilo' : 'Tranquilo'
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="p-5">

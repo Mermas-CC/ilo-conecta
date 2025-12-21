@@ -70,7 +70,7 @@ function RestaurantDetail({ restaurantId, onBack }) {
                 <FaMapMarkerAlt className="text-primary-400" /> {restaurant.location || restaurant.address}
               </div>
               <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
-                <FaCompass className="text-primary-400" /> {restaurant.priceRange || '$$'}
+                <FaCompass className="text-primary-400" /> {restaurant.pricerange || '$$'}
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ function RestaurantDetail({ restaurantId, onBack }) {
                     </div>
                     <div>
                       <h4 className="font-black text-gray-800 uppercase text-xs tracking-widest mb-1">Horario de Atención</h4>
-                      <p className="text-gray-500 font-bold">{restaurant.openingHours || '11:00 AM - 10:00 PM'}</p>
+                      <p className="text-gray-500 font-bold">{restaurant.openinghours || '11:00 AM - 10:00 PM'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-5">

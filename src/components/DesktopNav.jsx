@@ -19,9 +19,9 @@ export default function DesktopNav() {
     const navLinks = [
         { name: 'Inicio', path: '/', icon: <FaHome /> },
         { name: 'Rutas', path: '/routes', icon: <FaMapMarkedAlt /> },
-        { name: 'Atractivos', path: '/attractions', icon: <FaInfoCircle /> },
-        { name: 'Comer', path: '/restaurants', icon: <FaUtensils /> },
-        { name: 'Dormir', path: '/hotels', icon: <FaHotel /> },
+        { name: 'Lugares', path: '/attractions', icon: <FaInfoCircle /> },
+        { name: 'Restaurantes', path: '/restaurants', icon: <FaUtensils /> },
+        { name: 'Hoteles', path: '/hotels', icon: <FaHotel /> },
         { name: 'Eventos', path: '/events', icon: <FaCalendarAlt /> },
     ];
 

@@ -5,7 +5,7 @@ const MobileNav = () => {
     const navItems = [
         { name: 'Inicio', path: '/', icon: <FaHome size={22} /> },
         { name: 'Rutas', path: '/routes', icon: <FaMapSigns size={22} /> },
-        { name: 'Atractivos', path: '/attractions', icon: <FaUmbrellaBeach size={22} /> },
+        { name: 'Lugares', path: '/attractions', icon: <FaUmbrellaBeach size={22} /> },
         { name: 'Scanner', path: '/qr-scanner', icon: <FaQrcode size={22} /> },
         { name: 'Perfil', path: '/profile', icon: <FaUser size={22} /> },
     ];

@@ -35,7 +35,7 @@ export default function Home() {
     };
 
     const exploreCategories = [
-        { icon: FaMapMarkedAlt, label: 'Atractivos Turísticos', link: '/attractions', color: 'bg-primary-500' },
+        { icon: FaMapMarkedAlt, label: 'Lugares', link: '/attractions', color: 'bg-primary-500' },
         { icon: FaQrcode, label: 'Escaner QR', link: '/qr-scanner', color: 'bg-primary-600' },
         { icon: FaGlobe, label: 'Interactivos', link: '/interactive', color: 'bg-primary-700' },
         { icon: FaLaptop, label: 'Plataforma Web', link: '/', color: 'bg-primary-500' },
@@ -46,19 +46,19 @@ export default function Home() {
             icon: FaUtensils,
             label: 'Restaurantes',
             link: '/restaurants',
-            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop'
+            image: '/IMG ILO CONECTA/IMG RESTAURANTES/NAYAR RESTAURANTE.jpg'
         },
         {
             icon: FaHotel,
-            label: 'Hotels',
+            label: 'Hospedaje',
             link: '/hotels',
-            image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop'
+            image: '/IMG ILO CONECTA/IMG HOSPEDAJE/VIP HOTEL ILO.png'
         },
         {
             icon: FaPlane,
             label: 'Agencias Viaje',
             link: '/agencies',
-            image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&h=400&fit=crop'
+            image: '/IMG ILO CONECTA/IMG LUGARES/MALECON COSTERO.jpg'
         },
     ];
 
@@ -70,9 +70,9 @@ export default function Home() {
                     <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <img
-                                src="/logo.png"
+                                src="/IMG ILO CONECTA/LOGO/LOGO DE ILO CONECTA.jpg"
                                 alt="Ilo Conecta"
-                                className="w-10 h-10"
+                                className="w-10 h-10 object-contain"
                                 onError={(e) => {
                                     e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%2300bcd4" width="100" height="100"/><text x="50" y="50" font-size="40" fill="white" text-anchor="middle" dominant-baseline="middle">IL</text></svg>';
                                 }}
